@@ -1,6 +1,6 @@
 Install msys64 with the OpenCV version 4.30 libraries.
 
-Compile camlib with g++ using this command line:
+Compile camlib with g++ from mingw64 using this command line:
 	g++ -c -g -IC:\msys64\mingw64\include\opencv4 video/camlib_opencv.cpp
 
 Compile camlib with cl from VC++ using this command line: (must be run in x64 native tools VS command prompt)
