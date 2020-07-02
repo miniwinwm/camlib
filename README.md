@@ -5,6 +5,7 @@ This repo contains the source code for the static libraries that the MiniWinCame
 The API to all these drivers is common. There are 3 functions:
 
   void camlib_init(void);             // initialise the driver, call once at start-up
+  
   void camlib_capture(void);          // capture a QQVGA image 160 x 120 pixels
   uint16_t *camlib_get_frame(void)   // return a pointer to a static uint16_t[160][120] array in camlib containing the image
   
