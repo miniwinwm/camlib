@@ -20,6 +20,8 @@ All the embedded examples using bit banging to read the camera. This is slow and
 
 The static library binaries produced by compiling the source code found here are included in the MiniWin repo. It is not necessary to obtain this repo and build the code if using the MiniWinCamera example projects. 
 
+In the embedded versions interrupts are disabled by camlib code when reading a frame to prevent glitches. This is done globally for the ARM variants and per-interrupt for the RX variants (allowing the code to work correctly in user mode). Disabling interrupts is not ideal, but these libraries are 'quick and dirty'. Do not use them in time critical applications.
+
 Documentation on the embedded examples' connections required and the resources used are in Appendix 4 of the main MiniWin documentation under the miniwinwm/MiniWin/docs folder found here...
 
 https://github.com/miniwinwm/miniwinwm/tree/master/MiniWin/docs
