@@ -107,7 +107,7 @@ const uint8_t OV7670_register_setup[][2] =
 	{0x4b, 0x01},
 };
 
-uint8_t frame_buffer[160 * 120 * 2];
+
 
 static void xclk_init(void);
 static void sccb_init(void);
@@ -124,106 +124,6 @@ void camlib_init(void)
 	ov7670_init();
 	I2C_DeInit(I2C1);
 }
-
-uint16_t *camlib_get_frame(void)
-{
-	return (uint16_t *)&frame_buffer[0];
-}
-
-void camlib_capture(void)
-{
-	uint_fast32_t i;
-	uint8_t dummy;
-
-	__disable_irq();
-
-	// wait for VS
-	while (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_11) == Bit_RESET)
-	{
-	}
-	while (GPIO_ReadInputDataBit(GPIOC, GPIO_Pin_11) == Bit_SET)
-	{
-	}
-	i = 0UL;
-
-	for (uint_fast8_t y = 0U; y < 120U; y++)
-	{
-		// wait for first HS
-		while (!(GPIOA->IDR & GPIO_Pin_5))
-		{
-		}
-
-		while ((GPIOA->IDR & GPIO_Pin_5))
-		{
-		}
-
-		// wait for second HS
-		while (!(GPIOA->IDR & GPIO_Pin_5))
-		{
-		}
-
-		for (uint_fast16_t x = 0U; x < 160U; x++)
-		{
-			// wait for PLK
-			while (!(GPIOB->IDR & GPIO_Pin_4))
-			{
-			}
-
-			frame_buffer[i] = GPIOE->IDR;
-			frame_buffer[i] &= ~0b0000000010000011U;
-			frame_buffer[i] |= (GPIOG->IDR & 0b0000001000001100U) >> 2;
-			i++;
-
-			// wait for ~PLK
-			while ((GPIOB->IDR & GPIO_Pin_4))
-			{
-			}
-
-			// wait for PLK
-			while (!(GPIOB->IDR & GPIO_Pin_4))
-			{
-			}
-
-			frame_buffer[i] = GPIOE->IDR;
-			frame_buffer[i] &= ~0b0000000010000011U;
-			frame_buffer[i] |= (GPIOG->IDR & 0b0000001000001100U) >> 2;
-			i++;
-
-			// wait for ~PLK
-			while ((GPIOB->IDR & GPIO_Pin_4))
-			{
-			}
-
-			// repeat doing dummy read
-			while (!(GPIOB->IDR & GPIO_Pin_4))
-			{
-			}
-
-			dummy = GPIOE->IDR;
-			dummy &= ~0b0000000010000011U;
-			dummy |= (GPIOG->IDR & 0b0000001000001100U) >> 2;
-
-			while ((GPIOB->IDR & GPIO_Pin_4))
-			{
-			}
-
-			while (!(GPIOB->IDR & GPIO_Pin_4))
-			{
-			}
-
-			dummy = GPIOE->IDR;
-			dummy &= ~0b0000000010000011U;
-			dummy |= (GPIOG->IDR & 0b0000001000001100U) >> 2;
-
-			while ((GPIOB->IDR & GPIO_Pin_4))
-			{
-			}
-		}
-	}
-
-	__enable_irq();
-}
-
 
 static void delay(volatile uint16_t count)
 {

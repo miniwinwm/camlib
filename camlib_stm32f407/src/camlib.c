@@ -250,7 +250,7 @@ static void xclk_init(void)
 
 	TIM_Cmd(TIM10, ENABLE);
 }
-	
+
 static void sccb_init(void)
 {
 	GPIO_InitTypeDef GPIO_InitStructure;
